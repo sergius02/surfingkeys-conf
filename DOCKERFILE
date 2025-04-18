@@ -1,0 +1,25 @@
+FROM node:18-alpine
+
+# Install system dependencies needed to compile native modules
+RUN apk add --no-cache python3 make g++ gcc
+
+# Create application directory
+WORKDIR /app
+
+# Copy dependency configuration files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the source code
+COPY . .
+
+# Build the project
+RUN npm run gulp build
+
+# Expose port (adjust according to your server configuration)
+EXPOSE 9919
+
+# Command to start the application
+CMD ["npm", "run", "gulp", "serve-simple"]
